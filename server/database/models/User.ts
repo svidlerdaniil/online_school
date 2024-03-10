@@ -1,23 +1,31 @@
-import { Table, Column, Model, DataType, ForeignKey} from 'sequelize-typescript';
+import {
+  Table,
+  Column,
+  Model,
+  DataType,
+  ForeignKey,
+  HasOne,
+  BelongsTo,
+} from 'sequelize-typescript';
 import Parent from './Parent';
+import Role from './Role';
 @Table({
-    tableName: "user",
-    modelName: "User",
-    timestamps: false
+  tableName: 'user',
+  modelName: 'User',
+  timestamps: false,
 })
 class User extends Model {
-  @ForeignKey(() => Parent)
   @Column({
     type: DataType.UUID,
     defaultValue: DataType.UUIDV4,
     unique: true,
     primaryKey: true,
-    allowNull: false
+    allowNull: false,
   })
   declare id: string;
   @Column({
-    type: DataType.INTEGER,
-    allowNull: false
+    type: DataType.BIGINT,
+    allowNull: false,
   })
   declare phoneNumber: Number;
   @Column({
@@ -35,7 +43,10 @@ class User extends Model {
     type: DataType.STRING,
   })
   declare name: string;
-};
-
+  @HasOne(() => Parent, 'userId')
+  declare parent: Parent;
+  @BelongsTo(() => Role, { foreignKey: 'roleId', as: 'role' }) // Fix the foreignKey name here
+  declare role: Role;
+}
 
 export default User;

@@ -5,6 +5,7 @@ import sequelize from './database/connection';
 import jwt from "jsonwebtoken";
 import { registerValidator } from './validations/auth';
 import { Result, validationResult } from 'express-validator';
+import {login, registerParent} from "./authController"
 
 config();
 
@@ -17,23 +18,9 @@ app.get('/', (req: Request, res: Response) => {
   res.send('Сервак');
 });
 
-app.post('/auth/register', registerValidator, (req: Request, res: Response) => {
-  const errors = validationResult(req);
-  console.log(req.body);
-  if (!errors.isEmpty()) {
-    return res.status(400).json(errors.array());
-  }
-  res.json({
-    success: true,
-  })
-})
+app.post('/auth/register', registerParent);
 
-app.post('/auth/login', (req: Request, res: Response) => {
-  token: String = jwt.sign({
-    password: String = req.body.password
-  },
-  process.env.SECRET_KEY);
-})
+app.post('/auth/login', login);
 
 // app.get('/items', MenuItemController.getAll);
 // app.get('/items/:id', MenuItemController.getOne);

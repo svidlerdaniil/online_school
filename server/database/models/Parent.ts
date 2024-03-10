@@ -1,8 +1,8 @@
-import { Table, Column, Model, DataType, HasOne, ForeignKey} from 'sequelize-typescript';
+import { Table, Column, Model, DataType, HasOne, ForeignKey, BelongsTo} from 'sequelize-typescript';
 import User from './User';
 @Table({
-    tableName: "user",
-    modelName: "User",
+    tableName: "parent",
+    modelName: "Parent",
     timestamps: false
 })
 class Parent extends Model {
@@ -14,14 +14,13 @@ class Parent extends Model {
     allowNull: false
   })
   declare id: string;
+  @ForeignKey(() => User)
   @Column({
     type: DataType.UUID,
     unique: true,
     allowNull: false
   })
   declare userId: string;
-  @HasOne(() => User, 'id')
-  declare user: User;
 };
 
 
