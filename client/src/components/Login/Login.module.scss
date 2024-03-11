@@ -1,0 +1,54 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  form {
+    padding: 15px;
+    display: flex;
+    border: 1px solid #a9a9a9;
+    border-radius: 5px;
+    flex-direction: column;
+    align-items: center;
+    .authButtons {
+      display: flex;
+      justify-content: space-between;
+      .authButton {
+        border: 1px solid #a9a9a9;
+        border-radius: 3px;
+        padding: 5px 10px;
+        cursor: pointer;
+      }
+      .activeButton {
+        background-color: #000000;
+        color: #ffffff;
+      }
+    }
+    .formRow {
+      display: flex;
+      flex-direction: column;
+      align-items: start;
+      margin-top: 10px;
+      input {
+        border: 1px solid #a9a9a9;
+        border-radius: 3px;
+      }
+    }
+    button {
+      border: 1px solid #000000;
+      background-color: #000000;
+      color: white;
+      border-radius: 5px;
+      padding: 5px 15px;
+      align-self: flex-start;
+      margin-top: 10px;
+      transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+      cursor: pointer;
+      &:hover {
+        background-color: #ffffff;
+        color: #000000;
+      }
+    }
+  }
+}

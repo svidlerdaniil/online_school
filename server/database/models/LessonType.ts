@@ -8,14 +8,15 @@ import {
   BelongsTo,
   HasMany,
   AutoIncrement,
+  BelongsToMany,
 } from 'sequelize-typescript';
-import User from './User';
+import Lesson from './Lesson';
 @Table({
-  tableName: 'role',
-  modelName: 'Role',
+  tableName: 'lessonType',
+  modelName: 'LessonType',
   timestamps: false,
 })
-class Role extends Model {
+class LessonType extends Model {
   @Column({
     type: DataType.UUID,
     defaultValue: DataType.UUIDV4,
@@ -28,8 +29,8 @@ class Role extends Model {
     type: DataType.STRING,
   })
   declare name: string;
-  @HasMany(() => User, 'roleId')
-  declare users: User[];
+  @HasMany(() => Lesson, 'typeId')
+  declare lessons: Lesson[];
 }
 
-export default Role;
+export default LessonType;

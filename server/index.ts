@@ -2,10 +2,17 @@ import express, { Express, Request, Response } from 'express';
 import { config } from 'dotenv';
 import cors from 'cors';
 import sequelize from './database/connection';
-import jwt from "jsonwebtoken";
+import jwt from 'jsonwebtoken';
 import { registerValidator } from './validations/auth';
-import { Result, validationResult } from 'express-validator';
-import {login, registerParent} from "./authController"
+import { Result, check, validationResult } from 'express-validator';
+import { login, registerParent } from './authController';
+import {
+  LessonController,
+  RoleController,
+  UserController,
+  SubjectController,
+} from './database/controllers';
+import { checkRole } from './middleware/rolemiddleware';
 
 config();
 
@@ -21,6 +28,11 @@ app.get('/', (req: Request, res: Response) => {
 app.post('/auth/register', registerParent);
 
 app.post('/auth/login', login);
+
+app.post('/roles/create', RoleController.create); // удалить потом
+app.post('/users/teacher/create', checkRole(['менеджер']), UserController.createTeacher);
+app.post('/subjects/create', checkRole(['менеджер']), SubjectController.create); // поменять на админа
+app.get('/roles/teacher/get', checkRole(['менеджер']), RoleController.getAllTeachers);
 
 // app.get('/items', MenuItemController.getAll);
 // app.get('/items/:id', MenuItemController.getOne);

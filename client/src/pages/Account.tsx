@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const Account = () => {
@@ -13,24 +13,22 @@ const Account = () => {
         const token = await localStorage.getItem('token');
 
         if (!token) {
-          // Redirect to the login page if no token is found
-          navigate('/');
+          navigate('/auth');
           return;
         }
 
         const userString = await localStorage.getItem('user');
         if (!userString) {
-          // Redirect to the login page if no user data is found
-          navigate('/');
+          navigate('/auth');
           return;
         }
 
         const userObject = JSON.parse(userString);
         setUserData(userObject);
       } catch (error) {
-        console.error('Error fetching user data:', error);
+        console.error('Ошибка:', error);
       } finally {
-        setLoading(false); // Set loading to false once the data is processed
+        setLoading(false);
       }
     };
 
@@ -55,8 +53,11 @@ const Account = () => {
           <p>Hello, {userData.login}!</p>
           <p>Your role is: {userData.role.name}</p>
           <button type="button" onClick={handleLogout}>
-            Logout
+            Выйти
           </button>
+          <Link to={`/timetable`}>
+            <p>Расписание</p>
+          </Link>
         </>
       ) : (
         <p>User data not found. Please log in again.</p>

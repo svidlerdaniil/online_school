@@ -6,15 +6,21 @@ import {
   ForeignKey,
   HasOne,
   BelongsTo,
+  AutoIncrement,
+  BelongsToMany,
+  HasMany,
 } from 'sequelize-typescript';
-import Parent from './Parent';
 import Role from './Role';
+import Subject from './Subject';
+import UserSubject from './UserSubject';
+import Lesson from './Lesson';
 @Table({
   tableName: 'user',
   modelName: 'User',
   timestamps: false,
 })
 class User extends Model {
+  @AutoIncrement
   @Column({
     type: DataType.UUID,
     defaultValue: DataType.UUIDV4,
@@ -43,10 +49,34 @@ class User extends Model {
     type: DataType.STRING,
   })
   declare name: string;
-  @HasOne(() => Parent, 'userId')
-  declare parent: Parent;
-  @BelongsTo(() => Role, { foreignKey: 'roleId', as: 'role' }) // Fix the foreignKey name here
-  declare role: Role;
+  @Column({
+    type: DataType.SMALLINT,
+  })
+  declare grade: number;
+  @Column({
+    type: DataType.INTEGER,
+    unique: true,
+  })
+  declare studentInnerId: number;
+  @Column({
+    type: DataType.STRING,
+  })
+  declare info: string;
+
+  @BelongsTo(() => User, { foreignKey: 'parentId', as: 'parent' })
+  declare parent: User;
+
+  @BelongsTo(() => Role, { foreignKey: 'roleId', as: 'role' })
+  declare role: string;
+
+  @BelongsToMany(() => Subject, () => UserSubject)
+  declare subjects: Subject[];
+
+  @HasMany(() => Lesson, 'teacherId')
+  declare teacherLessons: Lesson[];
+
+  @HasMany(() => Lesson, 'studentId')
+  declare studentLessons: Lesson[];
 }
 
 export default User;
