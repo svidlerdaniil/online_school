@@ -57,7 +57,7 @@ class Lesson extends Model {
   })
   declare dayOfTheWeek: number;
   @Column({
-    type: DataType.DECIMAL(1, 1),
+    type: DataType.REAL,
     allowNull: false,
   })
   declare duration: number;

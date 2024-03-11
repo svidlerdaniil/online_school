@@ -24,7 +24,6 @@ class UserSubject extends Model {
 
   @Column({
     type: DataType.SMALLINT,
-    allowNull: false,
   })
   declare maxGrade: number;
 }

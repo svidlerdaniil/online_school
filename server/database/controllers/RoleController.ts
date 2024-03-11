@@ -18,7 +18,7 @@ export const getAllTeachers = async (req: Request, res: Response) => {
     const roleId = (await Role.findOne({ where: { name: 'преподаватель' } })).dataValues.id;
     const teachers = await User.findAll({
       where: { roleId: roleId },
-      attributes: ['id', 'name', 'phoneNumber'],
+      attributes: ['teacherInnerId', 'name', 'phoneNumber'],
     });
     res.status(201).json({ teachers: teachers });
   } catch (error) {

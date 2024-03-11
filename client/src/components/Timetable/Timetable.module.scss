@@ -1,0 +1,23 @@
+h2 {
+  text-align: center;
+}
+.timetable {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  .teachersList {
+    margin-right: 25px;
+    margin-left: 5%;
+    .teacherName {
+      border: 2px solid #000000;
+      border-radius: 7px;
+      text-align: center;
+      transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+      cursor: pointer;
+      &:hover {
+        background-color: #000;
+        color: #fff;
+      }
+    }
+  }
+}

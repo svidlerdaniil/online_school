@@ -1,10 +1,10 @@
 import { React, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import TeachersBar from '../components/TeachersBar';
+import Timetable from '../components/Timetable';
 
-const Timetable = () => {
+const ManagersTimetable = () => {
   const [userData, setUserData] = useState(null);
-  const [loading, setLoading] = useState(true); // Introduce loading state
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -34,9 +34,9 @@ const Timetable = () => {
 
   return (
     <>
-      <TeachersBar />
+      <Timetable />
     </>
   );
 };
 
-export default Timetable;
+export default ManagersTimetable;

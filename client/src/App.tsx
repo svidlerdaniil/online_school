@@ -4,7 +4,7 @@ import Auth from './pages/Auth';
 import Account from './pages/Account';
 import './scss/index.scss';
 import './scss/reset.scss';
-import Timetable from './pages/Timetable';
+import ManagersTimetable from './pages/ManagersTimetable';
 
 function App() {
   return (
@@ -12,7 +12,7 @@ function App() {
       <div className="wrapper">
         <Routes>
           <Route path="/auth" element={<Auth />} />
-          <Route path="/timetable" element={<Timetable />} />
+          <Route path="/timetable" element={<ManagersTimetable />} />
           <Route path="*" element={<Navigate to="/account" />} />
           <Route path="/account" element={<Account />} />
         </Routes>

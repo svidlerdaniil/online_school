@@ -59,6 +59,11 @@ class User extends Model {
   })
   declare studentInnerId: number;
   @Column({
+    type: DataType.INTEGER,
+    unique: true,
+  })
+  declare teacherInnerId: number;
+  @Column({
     type: DataType.STRING,
   })
   declare info: string;
