@@ -45,18 +45,21 @@ const Account = () => {
 
   return (
     <div>
-      <h2>Welcome</h2>
+      <h2>Личный кабинет</h2>
       {loading ? (
         <p>Loading...</p>
       ) : userData ? (
         <>
-          <p>Hello, {userData.login}!</p>
-          <p>Your role is: {userData.role.name}</p>
+          <p>Добро пожаловать, {userData.name}!</p>
+          <p>Ваша роль: {userData.role.name}</p>
           <button type="button" onClick={handleLogout}>
             Выйти
           </button>
           <Link to={`/timetable`}>
             <p>Расписание</p>
+          </Link>
+          <Link to={`/students`}>
+            <p>Ученики</p>
           </Link>
         </>
       ) : (

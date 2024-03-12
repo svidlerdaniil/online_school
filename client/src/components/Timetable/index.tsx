@@ -2,11 +2,22 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './Timetable.module.scss';
 import axios from 'axios';
+import Lesson from '../Lesson';
 
 const Timetable = () => {
   const [teachers, setTeachers] = useState([]);
-  const [lessons, setLessons] = useState([]);
+  const [timetable, setTimetable] = useState([]);
   const navigate = useNavigate();
+
+  const daysNames = [
+    'Понедельник',
+    'Вторник',
+    'Среда',
+    'Четверг',
+    'Пятница',
+    'Суббота',
+    'Воскресенье',
+  ];
 
   useEffect(() => {
     getTeachers();
@@ -21,10 +32,9 @@ const Timetable = () => {
       });
       if (response.status === 201) {
         setTeachers(response.data.teachers);
-        console.log(response.data.teachers);
       } else {
         const { message } = response.data;
-        alert(message); // Handle error messages appropriately
+        alert(message);
       }
     } catch (error) {
       console.log(error);
@@ -33,7 +43,6 @@ const Timetable = () => {
 
   const handleTeacherClick = async (teacherInnerId) => {
     try {
-      console.log(teacherInnerId);
       const response = await axios.post(
         'http://localhost:4000/users/teacher/getlessons',
         {
@@ -45,11 +54,9 @@ const Timetable = () => {
           },
         },
       );
-      setLessons(response.data.lessons);
-      console.log(lessons);
+      setTimetable(response.data.timetable);
     } catch (error) {
       console.error(error);
-      // Handle the error
     }
   };
 
@@ -70,16 +77,19 @@ const Timetable = () => {
             ))}
           </ul>
         </div>
-        <div className="lessons">
-          <h3>Занятия</h3>
-          <ol>
-            {lessons.map((lesson) => (
-              <li>
-                День недели: {lesson.dayOfTheWeek} <br />
-                Длительность: {lesson.duration}
-              </li>
-            ))}
-          </ol>
+        <div className={styles.daysOfTheWeek}>
+          {timetable.map((dayOfTheWeek, i) => (
+            <div className="dayOfTheWeek">
+              <b>{daysNames[i]}</b>
+              {dayOfTheWeek.lessons.length > 0 ? (
+                dayOfTheWeek.lessons.map((lesson) => (
+                  <Lesson startTime={lesson.starttime} students={lesson.students} />
+                ))
+              ) : (
+                <p>Занятий нет</p>
+              )}
+            </div>
+          ))}
         </div>
       </div>
     </>

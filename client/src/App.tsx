@@ -5,12 +5,16 @@ import Account from './pages/Account';
 import './scss/index.scss';
 import './scss/reset.scss';
 import ManagersTimetable from './pages/ManagersTimetable';
+import Header from './components/Header';
+import Students from './pages/Students';
 
 function App() {
   return (
     <BrowserRouter>
       <div className="wrapper">
+        <Header />
         <Routes>
+          <Route path="/students" element={<Students />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/timetable" element={<ManagersTimetable />} />
           <Route path="*" element={<Navigate to="/account" />} />

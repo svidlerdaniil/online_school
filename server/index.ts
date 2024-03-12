@@ -38,8 +38,9 @@ app.post('/lessontype/create', checkRole(['менеджер']), LessonTypeContro
 app.post('/lessons/create', checkRole(['менеджер']), LessonController.create);
 
 app.post('/users/teacher/getlessons', checkRole(['менеджер']), LessonController.getTeachersLessons);
-app.get('/roles/teacher/get', checkRole(['менеджер']), RoleController.getAllTeachers);
 
+app.get('/roles/teacher/get', checkRole(['менеджер']), RoleController.getAllTeachers);
+app.get('/roles/students/get', checkRole(['менеджер']), RoleController.getAllStudents);
 // app.get('/items', MenuItemController.getAll);
 // app.get('/items/:id', MenuItemController.getOne);
 // app.post('/items', MenuItemController.create);

@@ -8,10 +8,10 @@ export const checkRole = (roles) => {
     }
 
     try {
-      const decoded = jwt.verify(token, process.env.SECRET_KEY); // Replace 'your-secret-key' with your actual secret key
+      const decoded = jwt.verify(token, process.env.SECRET_KEY);
       const userRole = decoded.role.name;
       if (roles.includes(userRole)) {
-        req.user = decoded; // Attach user information to the request object
+        req.user = decoded;
         next();
       } else {
         return res.status(403).json({ message: 'Unauthorized access' });
