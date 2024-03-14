@@ -63,3 +63,36 @@ export const createStudent = async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+
+export const editStudent = async (req: Request, res: Response) => {
+  try {
+    const { studentInnerId, name, phoneNumber, parentName, parentPhoneNumber, grade, info } =
+      req.body;
+    const student = await User.findOne({
+      where: { studentInnerId: studentInnerId },
+      include: [
+        {
+          model: User,
+          as: 'parent',
+        },
+      ],
+    });
+    console.log(student);
+    const newStudent = student.set({
+      name,
+      phoneNumber,
+      grade,
+      info,
+    });
+    student.parent.set({
+      name: parentName,
+      phoneNumber: parentPhoneNumber,
+    });
+    student.changed('parent', true);
+    await newStudent.save();
+    res.status(201).json();
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};

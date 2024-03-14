@@ -154,7 +154,16 @@ const Login = () => {
                   id="grade"
                 />
               </div>
-
+              <div className={styles.formRow}>
+                <label htmlFor="grade">Комментарий</label>
+                <input
+                  type="text"
+                  name="grade"
+                  value={loginData.grade}
+                  onChange={handleInputChange}
+                  id="grade"
+                />
+              </div>
               <button type="button" onClick={handleLogin}>
                 Зарегистрироваться
               </button>

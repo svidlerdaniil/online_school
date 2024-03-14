@@ -31,12 +31,12 @@ app.post('/auth/register', registerParent);
 app.post('/auth/login', login);
 
 app.post('/roles/create', RoleController.create); // удалить потом
-app.post('/users/teacher/create', checkRole(['менеджер']), UserController.createTeacher);
-app.post('/users/student/create', checkRole(['менеджер']), UserController.createStudent);
+app.post('/users/teacher/create', checkRole(['менеджер']), UserController.createTeacher); // заменить данные на норм
+app.post('/users/student/create', checkRole(['менеджер']), UserController.createStudent); // заменить данные на норм
 app.post('/subjects/create', checkRole(['менеджер']), SubjectController.create); // поменять на админа
 app.post('/lessontype/create', checkRole(['менеджер']), LessonTypeController.create); // поменять на админа
 app.post('/lessons/create', checkRole(['менеджер']), LessonController.create);
-
+app.post('/users/student/edit', checkRole(['менеджер']), UserController.editStudent);
 app.post('/users/teacher/getlessons', checkRole(['менеджер']), LessonController.getTeachersLessons);
 
 app.get('/roles/teacher/get', checkRole(['менеджер']), RoleController.getAllTeachers);
