@@ -3,8 +3,9 @@ import { Request, Response } from 'express';
 import LessonType from '../models/LessonType';
 import User from '../models/User';
 import { Sequelize } from 'sequelize-typescript';
+import Subject from '../models/Subject';
 
-export const create = async (req: Request, res: Response) => {
+export const createOld = async (req: Request, res: Response) => {
   try {
     const {
       type,
@@ -100,6 +101,33 @@ export const getTeachersLessons = async (req: Request, res: Response) => {
       }));
     });
     res.status(201).json({ timetable: formattedLessons });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+export const create = async (req: Request, res: Response) => {
+  try {
+    const lessonData = req.body;
+    console.log(lessonData);
+    const lessonType = await LessonType.findOne({ where: { name: lessonData.lessonType } });
+    const subject = await Subject.findOne({ where: { name: lessonData.subject } });
+    const student = await User.findOne({ where: { studentInnerId: lessonData.studentInnerId } });
+    const teacher = await User.findOne({ where: { teacherInnerId: lessonData.teacherInnerId } });
+    const newLesson = await Lesson.create({
+      typeId: lessonType.id,
+      studentId: student.id,
+      teacherId: teacher.id,
+      subjectId: subject.id,
+      startTime: lessonData.startTime,
+      dayOfTheWeek: lessonData.dayOfTheWeek,
+      duration: lessonData.duration,
+      comment: lessonData.comment,
+      isOneTime: lessonData.isOneTime,
+      isCanceled: false,
+    });
+    res.status(201).json({ lesson: newLesson });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });

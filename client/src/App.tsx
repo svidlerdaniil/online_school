@@ -11,16 +11,14 @@ import Students from './pages/Students';
 function App() {
   return (
     <BrowserRouter>
-      <div className="wrapper">
-        <Header />
-        <Routes>
-          <Route path="/students" element={<Students />} />
-          <Route path="/auth" element={<Auth />} />
-          <Route path="/timetable" element={<ManagersTimetable />} />
-          <Route path="*" element={<Navigate to="/account" />} />
-          <Route path="/account" element={<Account />} />
-        </Routes>
-      </div>
+      <Header />
+      <Routes>
+        <Route path="/students" element={<Students />} />
+        <Route path="/auth" element={<Auth />} />
+        <Route path="/timetable" element={<ManagersTimetable />} />
+        <Route path="*" element={<Navigate to="/account" />} />
+        <Route path="/account" element={<Account />} />
+      </Routes>
     </BrowserRouter>
   );
 }

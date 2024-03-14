@@ -21,4 +21,56 @@ h2 {
       }
     }
   }
+  .dayOfTheWeek {
+    margin-top: 15px;
+    .dayOfTheWeekLessons {
+      margin-top: 5px;
+      display: flex;
+      flex-direction: row;
+    }
+  }
+}
+
+.editStudentWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .addLessonForm {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    margin-top: 10px;
+    font-size: 30px;
+    input,
+    select {
+      border: 1px solid #a9a9a9;
+      border-radius: 3px;
+      font-size: 30px;
+    }
+    .checkBox {
+      width: 30;
+      height: 30px;
+    }
+    .formRow {
+      display: flex;
+      flex-direction: column;
+      margin-top: 10px;
+    }
+    button {
+      font-size: 30px;
+      border: 1px solid #000000;
+      background-color: #000000;
+      color: white;
+      border-radius: 5px;
+      padding: 5px 15px;
+      align-self: flex-start;
+      margin-top: 20px;
+      transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+      cursor: pointer;
+      &:hover {
+        background-color: #ffffff;
+        color: #000000;
+      }
+    }
+  }
 }

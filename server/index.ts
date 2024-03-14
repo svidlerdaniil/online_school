@@ -38,9 +38,15 @@ app.post('/lessontype/create', checkRole(['менеджер']), LessonTypeContro
 app.post('/lessons/create', checkRole(['менеджер']), LessonController.create);
 app.post('/users/student/edit', checkRole(['менеджер']), UserController.editStudent);
 app.post('/users/teacher/getlessons', checkRole(['менеджер']), LessonController.getTeachersLessons);
+app.post(
+  '/users/teacher/getsubjects',
+  checkRole(['менеджер']),
+  SubjectController.getTeacherSubjects,
+);
 
 app.get('/roles/teacher/get', checkRole(['менеджер']), RoleController.getAllTeachers);
 app.get('/roles/students/get', checkRole(['менеджер']), RoleController.getAllStudents);
+app.get('/lessontypes/get', checkRole(['менеджер']), LessonTypeController.getLessonTypes);
 // app.get('/items', MenuItemController.getAll);
 // app.get('/items/:id', MenuItemController.getOne);
 // app.post('/items', MenuItemController.create);
