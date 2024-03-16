@@ -1,0 +1,19 @@
+.functionButtons {
+  display: flex;
+  flex-direction: column;
+  button {
+    border: 1px solid #000000;
+    background-color: #000000;
+    color: white;
+    border-radius: 5px;
+    padding: 5px 15px;
+    align-self: flex-start;
+    margin-top: 10px;
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+    cursor: pointer;
+    &:hover {
+      background-color: #ffffff;
+      color: #000000;
+    }
+  }
+}

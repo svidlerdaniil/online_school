@@ -12,6 +12,7 @@ const Students = () => {
   const [anchorPoint, setAnchorPoint] = useState({ x: 0, y: 0 }); // для контекстного меню
   const [contextMenuData, setContextMenuData] = useState(null);
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [userRole, setUserRole] = useState(null);
 
   useEffect(() => {
     getStudents();
@@ -19,9 +20,52 @@ const Students = () => {
   useEffect(() => {
     Modal.setAppElement('#root');
   }, []);
+
+  useEffect(() => {
+    async function fetchData() {
+      const role = await getUserRole();
+      if (role === 'преподаватель') {
+        getThisTeachersStudents();
+      }
+      if (role === 'менеджер') {
+        getStudents();
+      }
+    }
+    fetchData();
+  }, []); // Получить учителей, когда компонент смонтируется
+
+  const getUserRole = async () => {
+    const userString = await localStorage.getItem('user');
+    const role = JSON.parse(userString).role.name;
+    await setUserRole(role);
+    return role;
+  };
   const getStudents = async () => {
     try {
       const response = await axios.get('http://localhost:4000/roles/students/get', {
+        headers: {
+          token: localStorage.getItem('token'),
+        },
+      });
+      if (response.status === 201) {
+        const students = response.data.students;
+        const sortedStudents = students.sort((a, b) => {
+          return a.studentInnerId - b.studentInnerId;
+        });
+
+        setStudents(sortedStudents);
+      } else {
+        const { message } = response.data;
+        alert(message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getThisTeachersStudents = async () => {
+    try {
+      const response = await axios.get('http://localhost:4000/users/teacher/thisteachersstudents', {
         headers: {
           token: localStorage.getItem('token'),
         },

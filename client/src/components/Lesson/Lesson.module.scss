@@ -3,4 +3,14 @@
   border-radius: 7px;
   padding: 5px;
   margin-right: 15px;
+  .info {
+    .infoHeader {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      img {
+        cursor: pointer;
+      }
+    }
+  }
 }

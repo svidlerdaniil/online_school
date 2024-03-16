@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import styles from './Account.module.scss';
 
 const Account = () => {
   const [userData, setUserData] = useState(null);
@@ -52,18 +53,20 @@ const Account = () => {
         <>
           <p>Добро пожаловать, {userData.name}!</p>
           <p>Ваша роль: {userData.role.name}</p>
-          <button type="button" onClick={handleLogout}>
-            Выйти
-          </button>
-          <Link to={`/timetable`}>
-            <p>Расписание</p>
-          </Link>
-          <Link to={`/students`}>
-            <p>Ученики</p>
-          </Link>
+          <div className={styles.functionButtons}>
+            <Link to={`/timetable`}>
+              <button type="button">Расписание</button>
+            </Link>
+            <Link to={`/students`}>
+              <button type="button">Ученики</button>
+            </Link>
+            <button type="button" onClick={handleLogout}>
+              Выйти
+            </button>
+          </div>
         </>
       ) : (
-        <p>User data not found. Please log in again.</p>
+        <p>Ошибка. Авторизируйтесь заново.</p>
       )}
     </div>
   );

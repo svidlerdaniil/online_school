@@ -5,7 +5,10 @@ function Lesson({ startTime, students }) {
   return (
     <div className={styles.lesson}>
       <div className={styles.info}>
-        <b>{startTime}</b>
+        <div className={styles.infoHeader}>
+          <b>{startTime}</b>
+          <img src="img/info.svg" width={15} height={15} alt="info" />
+        </div>
         <table className={styles.lessonTable}>
           <thead>
             <tr>
