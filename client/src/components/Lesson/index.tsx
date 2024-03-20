@@ -1,5 +1,4 @@
 import styles from './Lesson.module.scss';
-import { Link } from 'react-router-dom';
 
 function Lesson({ startTime, students }) {
   return (

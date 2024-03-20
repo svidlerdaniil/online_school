@@ -8,15 +8,16 @@ import Modal from 'react-modal';
 
 const Timetable = () => {
   const defaulContextMenuData = {
-    studentInnerId: 1,
     teacherInnerId: 1,
+    studentInnerId: 1,
     type: 'групповое',
     startTime: '18:30',
     duration: 1,
     isOneTime: false,
   };
+  const [students, setStudents] = useState([]);
   const [teachers, setTeachers] = useState([]);
-  const [teacherId, setTeacherId] = useState(null);
+  const [teacher, setTeacher] = useState(null);
   const [timetable, setTimetable] = useState([]);
   const [teachersSubjects, setTeachersSubjects] = useState([]);
   const [isOpen, setOpen] = useState(false); // для контекстного меню
@@ -26,6 +27,7 @@ const Timetable = () => {
   const navigate = useNavigate();
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [userRole, setUserRole] = useState(null);
+  const [weekDates, setWeekDates] = useState([]);
 
   const daysNames = [
     'Понедельник',
@@ -38,6 +40,7 @@ const Timetable = () => {
   ];
   useEffect(() => {
     async function fetchData() {
+      getWeekDates();
       const role = await getUserRole();
       if (role === 'преподаватель') {
         setTeachersTimetable();
@@ -55,6 +58,23 @@ const Timetable = () => {
     await setUserRole(role);
     return role;
   };
+
+  const getWeekDates = () => {
+    const dates = [];
+    const curr = new Date();
+    const first = curr.getDate() - curr.getDay() + 1;
+    for (let i = 0; i < 7; i++) {
+      dates.push(
+        new Date(curr.setDate(first + i)).toLocaleString('ru-RU', {
+          month: 'numeric',
+          day: 'numeric',
+        }),
+      );
+    }
+    setWeekDates(dates);
+    console.log(dates);
+  };
+
   const getTeachers = async () => {
     try {
       const response = await axios.get('http://localhost:4000/roles/teacher/get', {
@@ -107,7 +127,7 @@ const Timetable = () => {
         setTeachersSubjects(response.data.subjects);
         setContextMenuData((prevData) => ({
           ...prevData,
-          subject: response.data.subjects[0], // Assuming subjects is not empty
+          subject: response.data.subjects[0],
         }));
       } else {
         const { message } = response.data;
@@ -118,12 +138,12 @@ const Timetable = () => {
     }
   };
 
-  const handleTeacherClick = async (teacherInnerId) => {
+  const handleTeacherClick = async (teacher) => {
     try {
       const response = await axios.post(
         'http://localhost:4000/users/teacher/getlessons',
         {
-          teacherInnerId: teacherInnerId,
+          teacherInnerId: teacher.teacherInnerId,
         },
         {
           headers: {
@@ -131,8 +151,12 @@ const Timetable = () => {
           },
         },
       );
-      setTeacherId(teacherInnerId);
-      getTeachersSubjects(teacherInnerId);
+      await setContextMenuData((prevData) => ({
+        ...prevData,
+        teacherInnerId: teacher.teacherInnerId,
+      }));
+      setTeacher(teacher);
+      getTeachersSubjects(teacher.teacherInnerId);
       setTimetable(response.data.timetable);
     } catch (error) {
       console.error(error);
@@ -159,20 +183,21 @@ const Timetable = () => {
     console.log(contextMenuData);
   };
 
-  const handleContextMenuClick = (e, dayOfTheWeek, teacherInnerId) => {
+  const handleContextMenuClick = (e, dayOfTheWeek, teacher) => {
     if (typeof document.hasFocus === 'function' && !document.hasFocus()) return;
 
     e.preventDefault();
     setContextMenuData((prevData) => ({
       ...prevData,
       dayOfTheWeek: dayOfTheWeek,
-      teacherInnerId: teacherInnerId, // Assuming lessonTypes is not empty
+      teacher: teacher,
     }));
     setAnchorPoint({ x: e.clientX, y: e.clientY });
     setOpen(true);
   };
   const createLesson = async () => {
     try {
+      console.log('DATA: ', contextMenuData);
       const response = await axios.post('http://localhost:4000/lessons/create', contextMenuData, {
         headers: {
           token: localStorage.getItem('token'),
@@ -204,7 +229,8 @@ const Timetable = () => {
     }
   };
 
-  const openModal = () => {
+  const openModal = async () => {
+    await getStudents();
     setModalIsOpen(true);
   };
 
@@ -214,11 +240,43 @@ const Timetable = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     await createLesson();
-    await handleTeacherClick(contextMenuData.teacherInnerId);
+    await handleTeacherClick(contextMenuData.teacher);
     setContextMenuData(defaulContextMenuData);
 
     closeModal();
   };
+  const getStudents = async () => {
+    try {
+      const response = await axios.get('http://localhost:4000/roles/students/get', {
+        headers: {
+          token: localStorage.getItem('token'),
+        },
+      });
+      if (response.status === 201) {
+        const students = response.data.students;
+        const sortedStudents = students.sort((a, b) => {
+          return a.studentInnerId - b.studentInnerId;
+        });
+
+        setStudents(sortedStudents);
+      } else {
+        const { message } = response.data;
+        alert(message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  function compare_teachers(a, b) {
+    if (a.teacherInnerId < b.teacherInnerId) {
+      return -1;
+    }
+    if (a.teacherInnerId > b.teacherInnerId) {
+      return 1;
+    }
+    return 0;
+  }
+
   return (
     <>
       <h2>Расписание</h2>
@@ -227,12 +285,12 @@ const Timetable = () => {
           <div className={styles.teachersList}>
             <h3>Учителя</h3>
             <ul>
-              {teachers.map((teacher) => (
+              {teachers.sort(compare_teachers).map((teacher) => (
                 <li
                   className={styles.teacherName}
                   key={teacher.teacherInnerId}
-                  onClick={() => handleTeacherClick(teacher.teacherInnerId)}>
-                  {teacher.name}
+                  onClick={() => handleTeacherClick(teacher)}>
+                  {teacher.teacherInnerId} {teacher.name}
                 </li>
               ))}
             </ul>
@@ -241,10 +299,14 @@ const Timetable = () => {
         <div className={styles.daysOfTheWeek}>
           {timetable.map((dayOfTheWeek, i) => (
             <div className={styles.dayOfTheWeek}>
-              <b>{daysNames[i]}</b>
+              <b>
+                {weekDates[i]} {daysNames[i]}
+              </b>
               <div
                 className={styles.dayOfTheWeekLessons}
-                onContextMenu={(e) => handleContextMenuClick(e, i + 1, teacherId)}>
+                onContextMenu={
+                  userRole === 'менеджер' && ((e) => handleContextMenuClick(e, i + 1, teacher))
+                }>
                 {dayOfTheWeek.lessons.length > 0 ? (
                   dayOfTheWeek.lessons.map((lesson) => (
                     <Lesson startTime={lesson.starttime} students={lesson.students} />
@@ -267,7 +329,7 @@ const Timetable = () => {
             <MenuItem onClick={openModal}>Добавить занятие</MenuItem>
             <MenuItem>Редактировать</MenuItem>
           </ControlledMenu>
-          {contextMenuData && (
+          {contextMenuData.teacher && (
             <Modal
               isOpen={modalIsOpen}
               onRequestClose={closeModal}
@@ -298,25 +360,29 @@ const Timetable = () => {
                   width={15}
                   style={{ alignSelf: 'end', cursor: 'pointer' }}
                 />
-                <h2>Добавить занятие</h2>
+                <h2>
+                  Добавить занятие (ID{teacher.teacherInnerId} {teacher.name})
+                </h2>
+                <p></p>
                 <form className={styles.addLessonForm} onSubmit={handleSubmit}>
                   <div className={styles.formRow}>
-                    <label>ID ученика</label>
-                    <input
+                    <label>Ученик</label>
+                    {/* <input
                       type="text"
                       name="studentInnerId"
                       value={contextMenuData.studentInnerId}
                       onChange={handleChange}
-                    />
-                  </div>
-                  <div className={styles.formRow}>
-                    <label>ID учителя</label>
-                    <input
-                      type="text"
-                      name="teacherInnerId"
-                      value={contextMenuData.teacherInnerId}
-                      onChange={handleChange}
-                    />
+                    /> */}
+                    <select
+                      className={styles.dropDown}
+                      name="studentInnerId"
+                      onChange={handleChange}>
+                      {students.map((student) => (
+                        <option key={student.studentInnerId} value={student.studentInnerId}>
+                          {student.studentInnerId}. {student.name} ({student.grade} кл.)
+                        </option>
+                      ))}
+                    </select>
                   </div>
                   <div className={styles.formRow}>
                     <label>Тип</label>

@@ -65,6 +65,7 @@ class User extends Model {
   declare teacherInnerId: number;
   @Column({
     type: DataType.STRING,
+    unique: true,
   })
   declare info: string;
 

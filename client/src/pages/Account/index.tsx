@@ -46,13 +46,12 @@ const Account = () => {
 
   return (
     <div>
-      <h2>Личный кабинет</h2>
       {loading ? (
         <p>Loading...</p>
       ) : userData ? (
         <>
+          <h2>Личный кабинет ({userData.role.name})</h2>
           <p>Добро пожаловать, {userData.name}!</p>
-          <p>Ваша роль: {userData.role.name}</p>
           <div className={styles.functionButtons}>
             <Link to={`/timetable`}>
               <button type="button">Расписание</button>
